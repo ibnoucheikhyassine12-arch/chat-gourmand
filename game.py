@@ -15,6 +15,8 @@ class Game:
         self.running = True
         self.started = False
         self.game_over = False
+        self.new_record = False
+        
 
         self.player = Player()
         self.objective = Objective()
@@ -52,8 +54,9 @@ class Game:
         if self.player.rect.colliderect(self.objective.rect):
             self.objective.respawn()
             self.score += 100
-        if self.score > self.best_score:
-            self.best_score = self.score
+            if self.score > self.best_score:
+                self.best_score = self.score
+                self.new_record = True
             self.objective.speed += SPEED_INCREASE
             self.bombe.speed += SPEED_INCREASE
 
@@ -103,12 +106,16 @@ class Game:
             texte_rejouer = self.font.render("Appuie sur ENTREE pour rejouer", True, (255, 255, 255))
             self.screen.blit(texte_fin, (SCREEN_WIDTH // 2 - texte_fin.get_width() // 2, SCREEN_HEIGHT // 2 - 40))
             self.screen.blit(texte_rejouer, (SCREEN_WIDTH // 2 - texte_rejouer.get_width() // 2, SCREEN_HEIGHT // 2 + 10))
+            if self.new_record:
+                texte_nouveau = self.font.render("NOUVEAU RECORD !", True, (255, 255, 0))
+                self.screen.blit(texte_nouveau, (SCREEN_WIDTH // 2 - texte_nouveau.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
 
     def reset(self):
         # remettre le jeu à zéro pour une nouvelle partie
         self.score = 0
         self.lives = PLAYER_LIVES
         self.game_over = False
+        self.new_record = False
         self.player = Player()
         self.objective = Objective()
         self.bombe = Bombe()
